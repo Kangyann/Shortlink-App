@@ -14,7 +14,6 @@ use BaconQrCode\Writer;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Str;
 
 class DashboardController extends Controller
 {
@@ -96,7 +95,7 @@ class DashboardController extends Controller
         $qr = $this->qr->where('user_id', '=', Auth::user()->id)->paginate(5);
         return view('dashboard.qr', compact('data', 'qr'));
     }
-    public function createQR()
+    public function createQR(Request $request, QRCode $qRCode)
     {
         if (request()->p) {
             $data = ['url' => 'required|url|unique:q_r_codes'];
@@ -105,21 +104,7 @@ class DashboardController extends Controller
                 notyf()->addError('Periksa kembali data yang akan dikirim.');
                 return back()->withErrors($validate);
             }
-            $writer = new Writer(
-                new ImageRenderer(
-                    new RendererStyle(300),
-                    new SvgImageBackEnd()
-                ),
-            );
-            $qrCode = $writer->writeString(request()->url);
-            $randomStr = Str::random(8);
-            Storage::disk('public')->put($randomStr . '.svg', $qrCode);
-            QRCode::create([
-                'url' => request()->url,
-                'qr' => $randomStr  . '.svg',
-                'code' => $randomStr,
-                'user_id' => Auth()->user()->id
-            ]);
+            $qRCode->createQr($request->url, Auth()->user()->id);
             notyf()->addSuccess('QR Code berhasil dibuat.');
             return back();
         }

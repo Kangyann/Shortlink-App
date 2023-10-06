@@ -1,6 +1,6 @@
 @extends('auth.app')
-@section('title','SIGN IN')
-@section('header','SIGN IN')
+@section('title', 'SIGN IN')
+@section('header', 'SIGN IN')
 @section('auth.signin')
     <form action="{{ route('auth@store') }}" method="POST" class="flex flex-col text-sm">
         <span class="mb-6">Belum punya akun ? <a href="{{ route('auth@signup') }}" class="text-info font-semibold">Daftar
@@ -9,7 +9,7 @@
             <span>Email</span>
             <div class="w-full">
                 <input type="text" name="email" placeholder="Email"
-                    class="w-full input input-bordered rounded-sm input-sm focus:outline-none">
+                    class="w-full input input-bordered rounded-sm input-sm focus:outline-none" value="{{ old('email') }}">
             </div>
             @error('email')
                 <span class="text-error">{{ $message }}</span>
@@ -23,7 +23,7 @@
                     name="password" placeholder="Password">
                 <div class="join-item flex items-center rounded-sm border px-2">
                     <label class="swap swap-rotate">
-                        <input type="checkbox" id="eye" name="New Password">
+                        <input type="checkbox" data-name="password">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                             stroke="currentColor" class="swap-off text-info w-6 h-6">
                             <path stroke-linecap="round" stroke-linejoin="round"
@@ -52,4 +52,16 @@
     </form>
     </div>
     </div>
+@endsection
+@section('js.signin')
+    <script type="text/javascript" defer>
+        jQuery(document).ready(() => {
+            _c = jQuery('input[type="checkbox"]')
+            jQuery(_c).click((e) => {
+                _i = jQuery(`input[name="${jQuery(_c).attr('data-name')}"]`)
+                if (_i[0].type === "password") return _i[0].type = "text"
+                return _i[0].type = "password"
+            })
+        });
+    </script>
 @endsection

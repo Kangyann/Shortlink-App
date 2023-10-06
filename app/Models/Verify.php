@@ -9,4 +9,5 @@ class Verify extends Model
 {
     use HasFactory;
     protected $fillable = ['token', 'username', 'user_id', 'expires_at'];
+    protected $hidden = ['token'];
 }

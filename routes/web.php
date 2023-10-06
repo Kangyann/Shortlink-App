@@ -52,5 +52,3 @@ Route::group(['middleware' => 'auth', 'prefix' => 'dashboard'], function () {
     Route::patch('qr', [DashboardController::class, 'createQR'])->name('qr@create');
     Route::post('qr', [DashboardController::class, 'createQR'])->name('qr@create');
 });
-// Route::get('/dashboard/qrcode', [ShortlinkController::class, 'createQR']);
-// Route::get('test', fn () => phpinfo());

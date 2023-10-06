@@ -79,7 +79,7 @@ class AuthController extends Controller
             'password' => $req->password,
             'api_key' => Str::random(32),
             'ip_address' => $req->ip(),
-            'limit' => 50
+            'limit' => 100
         ];
         $data['password'] = bcrypt($data['password']);
         $user->create($data);
@@ -111,13 +111,9 @@ class AuthController extends Controller
             ->to(new Address($request->email))
             ->subject('Resetpassword')
             ->text('Link Resetpassword : ' . env('APP_URL') . 'auth=' . $token);
-        // ->html('<span style="padding: 16px; background: red;">' . mt_rand(000000,999999) . '</span>');
-        // ->embed(fopen('https://mailtrap.io/wp-content/uploads/2021/04/mailtrap-new-logo.svg', 'r'), 'logo', 'image/svg+xml')
-
         $email->getHeaders()
             ->add(new CategoryHeader('Resetpassword'));
         $response = $mailtrap->sending()->emails()->send($email);
-
         notyf()->addSuccess('Link reset password telah dikirim ke email anda.');
         notyf()->addSuccess('Cek inbox atau spam.');
         Resetpassword::create($requestPasswordData);
@@ -132,6 +128,10 @@ class AuthController extends Controller
             'email' => 'required',
             'password' => 'required'
         ]);
+        if ($validate->fails()) {
+            notyf()->addError('Periksa kembali data anda.');
+            return back()->withInput();
+        }
         if (Auth::attempt(['email' => $req->email, 'password' => $req->password])) {
             $req->session()->regenerateToken();
             $user = User::where('email', '=', $req->email)->first();
@@ -146,9 +146,6 @@ class AuthController extends Controller
                     ->to(new Address($req->email))
                     ->subject('Verifikasi Akun')
                     ->text('Code Verifikasi : ' . $codeVerif);
-                // ->html('<span style="padding: 16px; background: red;">' . mt_rand(000000,999999) . '</span>');
-                // ->embed(fopen('https://mailtrap.io/wp-content/uploads/2021/04/mailtrap-new-logo.svg', 'r'), 'logo', 'image/svg+xml')
-
                 $email->getHeaders()
                     ->add(new CategoryHeader('Verifikasi Akun'));
                 $response = $mailtrap->sending()->emails()->send($email);

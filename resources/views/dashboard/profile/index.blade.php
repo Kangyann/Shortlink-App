@@ -20,7 +20,7 @@
                             class="input input-sm focus:outline-none w-full join-item" placeholder="Password Baru">
                         <div class="join-item px-3 flex items-center">
                             <label class="swap swap-rotate">
-                                <input type="checkbox" id="eye_password" name="New Password">
+                                <input type="checkbox" data-name="New Password">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                     stroke-width="1.5" stroke="currentColor" class="swap-off w-6 h-6">
                                     <path stroke-linecap="round" stroke-linejoin="round"
@@ -47,7 +47,7 @@
                             class="input input-sm focus:outline-none w-full join-item" placeholder="Ulangi Password Baru">
                         <div class="join-item px-3 flex items-center">
                             <label class="swap swap-rotate">
-                                <input type="checkbox" id="eye_password" name="New Password Confirmation">
+                                <input type="checkbox" data-name="New Password Confirmation">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                     stroke-width="1.5" stroke="currentColor" class="swap-off w-6 h-6">
                                     <path stroke-linecap="round" stroke-linejoin="round"
@@ -74,7 +74,7 @@
                             class="input input-sm focus:outline-none w-full join-item" placeholder="Password Lama">
                         <div class="join-item px-3 flex items-center ">
                             <label class="swap swap-rotate">
-                                <input type="checkbox" id="eye_password" name="Old Password">
+                                <input type="checkbox" data-name="Old Password">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                     stroke-width="1.5" stroke="currentColor" class="swap-off w-6 h-6">
                                     <path stroke-linecap="round" stroke-linejoin="round"
@@ -159,17 +159,13 @@
     </div>
 @endsection
 @section('js.profile')
-    <script defer>
-        const eyes = document.querySelectorAll('#eye_password')
-        eyes.forEach(eye => {
-            jQuery(eye).click(function(e) {
-                const input = $(`input[name="${eye.name}"]`)
-                if (input[0].type == 'password') {
-                    input[0].type = 'text'
-                } else {
-                    input[0].type = 'password'
-                }
-            });
-        });
+    <script type="text/javascript" defer>
+        $('input[type="checkbox"]').each((i, x) => {
+            jQuery(x).click((e) => {
+                _i = jQuery(`input[name="${jQuery(x).attr('data-name')}"]`)
+                if (_i[0].type === "password") return _i.type = 'text'
+                return _i.type = 'password'
+            })
+        })
     </script>
 @endsection

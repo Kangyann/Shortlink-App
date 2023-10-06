@@ -8,5 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class Resetpassword extends Model
 {
     use HasFactory;
-    protected $fillable = ['email', 'token','expires_at'];
+    protected $fillable = ['email', 'token', 'expires_at'];
+    protected $hidden = ['token'];
 }

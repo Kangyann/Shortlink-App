@@ -41,17 +41,9 @@ class Shortlink extends Model
         ],
 
     ];
-
     public static function assets()
     {
         return static::$source;
-    }
-
-    public static function getMethod($request, $err)
-    {
-    }
-    public static function postMethod($request)
-    {
     }
     public static function createShortlink($url)
     {

@@ -1,6 +1,6 @@
 @extends('auth.app')
-@section('title','SIGN UP')
-@section('header','SIGN UP')
+@section('title', 'SIGN UP')
+@section('header', 'SIGN UP')
 @section('auth.signup')
     <form action="{{ route('auth@create') }}" method="POST" class="flex flex-col text-sm">
         <span class="mb-5">Sudah punya akun ? <a href="{{ route('auth@signin') }}" class="text-info font-semibold">Login
@@ -46,7 +46,7 @@
                     placeholder="Password">
                 <div class="join-item flex items-center rounded-sm border px-2">
                     <label class="swap swap-rotate">
-                        <input type="checkbox" id="eye" name="New Password">
+                        <input type="checkbox" data-name="password">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                             stroke="currentColor" class="swap-off text-info w-6 h-6">
                             <path stroke-linecap="round" stroke-linejoin="round"
@@ -73,7 +73,7 @@
                     placeholder="Konfirmasi Password">
                 <div class="join-item flex items-center rounded-sm border px-2">
                     <label class="swap swap-rotate">
-                        <input type="checkbox" id="eye" name="New Password">
+                        <input type="checkbox" data-name="password_confirmation">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                             stroke="currentColor" class="swap-off text-info w-6 h-6">
                             <path stroke-linecap="round" stroke-linejoin="round"
@@ -93,9 +93,21 @@
             @enderror
         </div>
         <div class="my-3">
-
             <button type="submit" class="btn btn-sm btn-info mt-2 rounded-sm w-full text-white">Buat
                 Akun</button>
             @csrf
         </div>
+    @endsection
+    @section('js.signup')
+        <script type="text/javascript" defer>
+            jQuery(document).ready(() => {
+                jQuery('input[type="checkbox"]').each((i, x) => {
+                    jQuery(x).click((e) => {
+                        _i = jQuery(`input[name="${jQuery(x).attr('data-name')}"]`)
+                        if (_i[0].type === "password") return _i[0].type = 'text'
+                        return _i[0].type = 'password'
+                    });
+                });
+            });
+        </script>
     @endsection

@@ -2,7 +2,7 @@
 @section('title', 'Reset Password')
 @section('header', 'Reset Password')
 @section('auth.reset_valid')
-    <form action="{{ route('auth@reset_store',['token' => $tokenValid->token]) }}" method="POST" class="flex flex-col gap-3 text-sm my-3">
+    <form action="{{ route('auth@reset_store') }}" method="POST" class="flex flex-col gap-3 text-sm my-3">
         @method('PATCH')
         @csrf
         <div class="">
@@ -12,7 +12,7 @@
                     class="input input-sm input-bordered rounded-sm join-item w-full px-2 focus:outline-none">
                 <div class="join-item flex items-center rounded-sm border px-2">
                     <label class="swap swap-rotate">
-                        <input type="checkbox" id="eye">
+                        <input type="checkbox" data-name="New Password">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                             stroke="currentColor" class="swap-off text-info w-6 h-6">
                             <path stroke-linecap="round" stroke-linejoin="round"
@@ -38,7 +38,7 @@
                     class="input input-sm input-bordered rounded-sm join-item w-full px-2 focus:outline-none">
                 <div class="join-item flex items-center rounded-sm border px-2">
                     <label class="swap swap-rotate">
-                        <input type="checkbox" id="eye">
+                        <input type="checkbox" data-name="Konfirmasi New Password">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                             stroke="currentColor" class="swap-off text-info w-6 h-6">
                             <path stroke-linecap="round" stroke-linejoin="round"
@@ -59,4 +59,17 @@
         </div>
         <button type="submit" class="btn btn-sm btn-info rounded-sm w-full text-white">Simpan Perubahan</button>
     </form>
+@endsection
+@section('js.reset')
+    <script type="text/javascript" defer>
+        jQuery(document).ready(() => {
+            jQuery('input[type="checkbox"]').each((i, x) => {
+                jQuery(x).click((e) => {
+                    _i = jQuery(`input[name="${jQuery(x).attr('data-name')}"]`)
+                    if (_i[0].type === "password") return _i[0].type = 'text';
+                    return _i[0].type = 'password'
+                });
+            })
+        });
+    </script>
 @endsection

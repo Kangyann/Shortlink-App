@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\QRCode;
-use Illuminate\Support\Str;
 use App\Models\User;
 use Illuminate\Http\Request;
 
