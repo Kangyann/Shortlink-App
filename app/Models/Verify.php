@@ -18,7 +18,7 @@ class Verify extends Model
 
     public static function sendMail($data)
     {
-        $apiKey = '9f28e4a202125f7d4d884706259fc2c5';
+        $apiKey = '{MAIL_TRAP_APIKEY}';
         $mailtrap = new MailtrapClient(new Config($apiKey));
         $email = (new Email())
             ->from(new Address('support@rizal-pedia.my.id', 'Support'))
