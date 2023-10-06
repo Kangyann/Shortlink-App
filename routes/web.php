@@ -18,6 +18,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('/p/link', function () {
+    symlink(base_path() . '/storage/app/public', $_SERVER["DOCUMENT_ROOT"] . '/storage');
+}); //  ADDED FOR STORAGE FILES
+
 Route::get('/', [ShortlinkController::class, 'index']);
 Route::post('/', [ShortlinkController::class, 'store'])->name('short@store');
 Route::get('/{code}', [ShortlinkController::class, 'show'])->name('short@show');
@@ -38,12 +42,12 @@ Route::group(['prefix' => 'auth', 'middleware' => 'guest'], function () {
     Route::post('signup', [AuthController::class, 'create'])->name('auth@create');
 });
 
-Route::group(['prefix' => 'auth'], function () {
+Route::group(['prefix' => 'auth', 'middleware' => 'auth'], function () {
     Route::get('verify', [AuthController::class, 'verify'])->name('auth@verify');
     Route::patch('verify', [AuthController::class, 'verify_store'])->name('auth@verify_store');
+    Route::post('verify', [AuthController::class, 'verify_store_again']);
 });
-Route::post('logout', [AuthController::class, 'destroy'])->name('auth@logout')->middleware('auth')->prefix('auth');
-Route::group(['middleware' => 'auth', 'prefix' => 'dashboard'], function () {
+Route::group(['middleware' => ['auth', 'verify'], 'prefix' => 'dashboard'], function () {
     Route::resource('profile', ProfileController::class)->only(['index', 'update']);
     Route::get('/home', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('custom', [DashboardController::class, 'custom'])->name('dashboard@custom');
@@ -52,3 +56,5 @@ Route::group(['middleware' => 'auth', 'prefix' => 'dashboard'], function () {
     Route::patch('qr', [DashboardController::class, 'createQR'])->name('qr@create');
     Route::post('qr', [DashboardController::class, 'createQR'])->name('qr@create');
 });
+
+Route::post('logout', [AuthController::class, 'destroy'])->name('auth@logout')->middleware('auth')->prefix('auth');

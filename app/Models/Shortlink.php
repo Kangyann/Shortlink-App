@@ -10,7 +10,7 @@ class Shortlink extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['from_link', 'to_link', 'code', 'qr', 'user_id', 'expires_at'];
+    protected $fillable = ['from_link', 'to_link', 'code', 'qr', 'user_id', 'expires_at','visitor'];
     private static $source = [
         [
             'image' => 'shield.png',

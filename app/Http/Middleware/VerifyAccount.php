@@ -18,6 +18,8 @@ class VerifyAccount
     {
         if (Auth::check()) {
             if (!Auth::user()->email_verified_at)
+            notyf()->addWarning('Akun anda belum terverifikasi');
+            notyf()->addWarning('Cek kode yang telah dikirimkan ke Email anda.');
                 return redirect()->route('auth@verify');
         }
         return $next($request);

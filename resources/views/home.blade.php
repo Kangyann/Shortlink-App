@@ -1,16 +1,16 @@
 @extends('app')
 @section('title', 'Shortlink')
 @section('home')
-    <h1 class="font-bold text-3xl text-info mb-5 font-serif">URL Shortenner</h1>
-    <div class="shadow-slate-500 shadow rounded-md p-5 mb-5" >
+    <h1 class="font-bold text-3xl mb-5 font-serif">URL Shortenner</h1>
+    <div class="shadow-slate-500 shadow rounded-md p-5 mb-5">
         <h2 class="font-inter text-xl mb-3 font-semibold font-serif">Paste Your URL To Shorten</h2>
         <form action="{{ route('short@store') }}" method="POST">
             @csrf
             <div class="join w-full border rounded-sm">
                 <input type="text" name="url" class="w-full input-sm join-item p-1 px-2 outline-none"
                     placeholder="https://example.com/">
-                <button type="submit" name="submit" value="guest"
-                    class="btn btn-sm btn-info text-white join-item border ">Short</button>
+                <button type="submit" name="submit"@if (auth()->user()) @else value="guest" @endif
+                    class="btn btn-sm bg-info hover:bg-info-content text-white join-item border ">Short</button>
             </div>
             @error('url')
                 <div class="text-start text-sm text-red-600 mb-1">{{ $message }}</div>
@@ -20,7 +20,7 @@
                 <div class="join w-full rounded-sm border">
                     <input type="text" value="{{ session('data') }}" class="input input-sm select-none join-item w-full"
                         disabled>
-                    <button type="button" class="btn btn-sm btn-info text-white join-item">COPY</button>
+                    <button type="button" class="btn btn-sm bg-info hover:bg-info-content text-white join-item">COPY</button>
                 </div>
             @endif
         </form>
@@ -29,7 +29,7 @@
         <div class="text-start mt-3">
             <h2 class="font-semibold text-lg font-serif">Premium Features</h2>
             <div class="my-3">
-                <ul class="grid lg:grid-cols-3 gap-1">
+                <ul class="grid lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-1 font-medium">
                     <li>Dashboard</li>
                     <li>Custom Link</li>
                     <li>Generate QR Code</li>
@@ -38,7 +38,12 @@
                     <li>Notification</li>
                 </ul>
             </div>
-            <span><a href="{{ route('auth@signup') }}" class="text-cyan-500">Signup Now</a> to get premium features </span>
+            @auth()
+            @else
+                <span><a href="{{ route('auth@signup') }}" class="text-info font-medium underline">Signup Now</a> to get premium
+                    features or <a href="{{ route('auth@signin') }}" class="text-info font-medium underline">Signin</a> If
+                    Already have account.</span>
+            @endauth
         </div>
     </div>
     <div class="text-start mb-10">

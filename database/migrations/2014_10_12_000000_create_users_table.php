@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('password');
             $table->text('whitelist_ip')->nullable();
             $table->string('api_key', 32)->nullable()->unique();
-            $table->tinyInteger('limit')->default(3);
+            $table->tinyInteger('limit')->nullable();
             $table->string('type')->default('Member');
             $table->ipAddress('ip_address')->nullable();
             $table->rememberToken();
