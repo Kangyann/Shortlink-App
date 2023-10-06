@@ -8,7 +8,7 @@
     <div class="grid lg:grid-cols-4 sm:grid-cols-2 gap-2 w-full mb-5">
         <div class="flex flex-col p-3 mb-2 items-center border-s-4 border-slate-700 shadow rounded-md">
             <span class="font-semibold">Ip Address</span>
-            <span>@if(auth()->user()->ip_address == null) 127.0.0.1 @else {{ auth()->user()->ip_address }} @endif</span>
+            <span>{{ request()->ip() }}</span>
         </div>
         <div class="flex flex-col p-3 mb-2 items-center border-s-4 border-slate-700 shadow rounded-md">
             <span class="font-semibold">Visitor ALL</span>
@@ -24,17 +24,6 @@
         </div>
     </div>
     <div class="mb-5 border p-3 rounded-md shadow-sm">
-        {{-- <div class="flex lg:flex-row md:flex-row flex-col gap-3 items-center justify-between mb-3">
-            <div class="flex items-center">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                    stroke="currentColor" class="fill-current w-5 h-5">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
-                </svg>
-                <input type="text" class="border outline-none rounded-md input-sm">
-                <button class="btn btn-sm btn-neutral">Search</button>
-            </div>
-            <a href="" class="btn btn-neutral btn-sm rounded-md">Download Report</a>
-        </div> --}}
         <div class="overflow-x-auto">
             <table class="table w-full text-center p-2 whitespace-nowrap">
                 <thead class="">

@@ -15,11 +15,11 @@ class DatabaseSeeder extends Seeder
         // \App\Models\User::factory(10)->create();
 
         \App\Models\User::factory()->create([
-            'name' => 'Kangyann',
-            'username' => 'Kangyann',
-            'email' => 'dianstore00@gmail.com',
-            'password' => bcrypt(123321),
-            'api_key' => Str::random(32),
+            'name' => 'demo',
+            'username' => 'demo',
+            'email' => 'demo@fdevs.biz.id',
+            'password' => bcrypt(Str::random(32)),
+            'type' => 'Demo Account'
         ]);
     }
 }

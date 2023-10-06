@@ -7,12 +7,13 @@
     <meta name="description" content="F Devs merupakan simple page untuk pembuatan Link yang sederhana, mudah digunakan dan praktis. Memiliki banyak fitur dan tersedia Free API untuk Pengembang Developer.">
     <meta property="og:title" content="F Devs a Simple Shortlink">
     <meta property="og:description" content="F Devs merupakan simple page untuk pembuatan Link yang sederhana, mudah digunakan dan praktis. Memiliki banyak fitur dan tersedia Free API untuk Pengembang Developer.">
-    <meta property="og:url" content="{{ config('app.url') }}">
+    <meta property="og:url" content="{{ request()->url() }}">
     <meta property="og:type" content="website/application">
     <title>@yield('title')</title>
+    <link rel="icon" type="image/x-icon" href="{{ asset('assets/images/favicon.ico') }}">
     <link rel="canonical" href="{{ request()->url() }}">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Quicksand:wght@300;400;500;600;700&display=swap">
-    <link rel="stylesheet" href="{{ asset('build/assets/app-be29d85a.css') }}">
+    <link rel="stylesheet" href="{{ asset('build/assets/app-a889ee34.css') }}">
     <link rel="manifest" href="{{ asset('build/manifest.json') }}">
     <script src="{{ asset('build/assets/app-dbe23e4c.js') }}" defer></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
@@ -20,15 +21,12 @@
 </head>
 <body>
     <div class="mx-auto lg:w-3/5  w-5/6 text-center">
-        <div
-            class="sticky top-2 z-10 border bg-white rounded-md shadow py-3 mb-5 flex justify-center gap-5 items-center px-3">
+        <div class="sticky top-2 z-10 border bg-white rounded-md shadow py-3 mb-5 flex justify-center gap-5 items-center px-3">
             <div class="lg:block hidden">
-                <a href="/"
-                    class=" @if (request()->is('/')) border-b-neutral font-bold border-b @endif">Home</a>
-                <a href="{{ route('api') }}"
-                    class="mx-2 @if (request()->is('p/api')) border-b-neutral font-bold border-b @endif">API</a>
+                <a href="/" class=" @if (request()->is('/')) border-b-neutral font-bold border-b @endif">Home</a>
+                <a href="{{ route('api') }}" class="mx-2 @if (request()->is('p/api')) border-b-neutral font-bold border-b @endif">API</a>
                 @auth
-                    <a href="{{ route('dashboard') }}">Dashboard</a>
+                <a href="{{ route('dashboard') }}">Dashboard</a>
                 @endauth
             </div>
             <div class="dropdown dropdown-bottom dropdown-start me-auto lg:hidden block">
@@ -46,11 +44,11 @@
                 </ul>
             </div>
             @auth
-                <a href="{{ route('profile.index') }}" class="ms-auto">{{ auth()->user()->name }}</a>
-                <form action="{{ route('auth@logout') }}" method="POST">
-                    <button type="submit">Logout</button>
-                    @csrf
-                </form>
+            <a href="{{ route('profile.index') }}" class="ms-auto">{{ auth()->user()->name }}</a>
+            <form action="{{ route('auth@logout') }}" method="POST">
+                <button type="submit">Logout</button>
+                @csrf
+            </form>
             @endauth
         </div>
         @yield('home')

@@ -57,10 +57,7 @@ class ProfileController extends Controller
     {
         $user = User::findOrFail($id);
         if ($request->has('changeperson')) {
-            $profile = [
-                'Name' => 'min:8',
-                'Username' => 'min:8',
-            ];
+            $profile = ['Username' => 'min:4'];
             $validate = Validator::make($request->only(['Name', 'Username', 'White_List_IP']), $profile);
             if ($validate->fails()) {
                 return back()->withErrors($validate);

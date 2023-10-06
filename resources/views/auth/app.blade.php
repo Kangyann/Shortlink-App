@@ -7,14 +7,15 @@
     <meta name="description" content="F Devs merupakan simple page untuk pembuatan Link yang sederhana, mudah digunakan dan praktis. Memiliki banyak fitur dan tersedia Free API untuk Pengembang Developer.">
     <meta property="og:title" content="F Devs a Simple Shortlink">
     <meta property="og:description" content="F Devs merupakan simple page untuk pembuatan Link yang sederhana, mudah digunakan dan praktis. Memiliki banyak fitur dan tersedia Free API untuk Pengembang Developer.">
-    <meta property="og:url" content="{{ config('app.url') }}">
+    <meta property="og:url" content="{{ request()->url() }}">
     <meta property="og:type" content="website/application">
     <title>F Devs | @yield('title')</title>
-    <link rel="canonical" href="{{ config('app.url') }}">
+    <link rel="icon" type="image/x-icon" href="{{ asset('assets/images/favicon.ico') }}">
+    <link rel="canonical" href="{{ request()->url() }}">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Quicksand:wght@300;400;500;600;700&display=swap">
-    <link rel="stylesheet" href="{{ asset('build/assets/app-be29d85a.css') }}">
+    <link rel="stylesheet" href="{{ asset('build/assets/app-a889ee34.css') }}">
     <link rel="manifest" href="{{ asset('build/manifest.json') }}">
-    <script src="{{ asset('build/assets/app-dbe23e4c.js') }}"></script>
+    <script src="{{ asset('build/assets/app-dbe23e4c.js') }}" defer></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js" ></script>
     <script type="application/ld+json">{ "@context": "http://schema.org", "@type": "website", "name": "F Devs Shortlink", "description": "Website untuk membuat LINK menjadi Sederhana dan Simple untuk digunakan.", "url" : "{{ config('app.url') }}", "brand": "Shortlink URL"} </script>
 </head>
@@ -34,4 +35,5 @@
 @yield('js.reset')
 @yield('js.signin')
 @yield('js.signup')
+@yield('js.verify')
 </html>

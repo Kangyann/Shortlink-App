@@ -29,7 +29,7 @@ class DashboardController extends Controller
         $this->user = $users;
         $this->qr = $qr;
     }
-    public function index(DashboardChart $chart)
+    public function index()
     {
         $get = $this->data->all()->where('user_id', Auth::user()->id);
         $data = $this->data->where('user_id', Auth::user()->id)->paginate(5);

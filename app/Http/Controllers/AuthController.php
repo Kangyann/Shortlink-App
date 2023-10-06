@@ -10,11 +10,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
-use Mailtrap\Config;
-use Mailtrap\EmailHeader\CategoryHeader;
-use Mailtrap\MailtrapClient;
-use Symfony\Component\Mime\Address;
-use Symfony\Component\Mime\Email;
 
 class AuthController extends Controller
 {
@@ -39,15 +34,14 @@ class AuthController extends Controller
     {
         if ($request->has('auth')) {
             $tokenValid = $resetpassword->where('token', '=', $request->auth)->first();
-            if (!$tokenValid) {
-                return abort(403);
-            }
+            if (!$tokenValid) return abort(403);
             return view('auth.valid', compact('tokenValid'));
         }
         return view('auth.reset');
     }
     public function verify()
     {
+        if (Auth()->user()->email_verified_at) return back();
         return view('auth.verify');
     }
     public function index()
@@ -59,7 +53,6 @@ class AuthController extends Controller
      */
     public function create(Request $req, User $user)
     {
-        //
         $validate = Validator::make($req->all(), [
             'name' => 'min:4|max:36|required',
             'username' => 'min:4|max:18|required|unique:users,username',
@@ -71,7 +64,6 @@ class AuthController extends Controller
             notyf()->addError('Periksa kembali data yang kamu isi.');
             return redirect()->route('auth@signup')->withErrors($validate)->withInput();
         }
-
         $data = [
             'name' => $req->name,
             'username' => $req->username,
@@ -104,19 +96,15 @@ class AuthController extends Controller
         $date = $this->date->addMinutes(30);
         $expires = $date->format('Y-m-d h:i:s');
         $requestPasswordData = ['email' => $request->email, 'token' => $token, 'expires_at' => $expires];
-        $apiKey = '{MAIL_TRAP_API_KEY}';
-        $mailtrap = new MailtrapClient(new Config($apiKey));
-        $email = (new Email())
-            ->from(new Address('support@rizal-pedia.my.id', 'Support'))
-            ->to(new Address($request->email))
-            ->subject('Resetpassword')
-            ->text('Link Resetpassword : ' . env('APP_URL') . 'auth=' . $token);
-        $email->getHeaders()
-            ->add(new CategoryHeader('Resetpassword'));
-        $response = $mailtrap->sending()->emails()->send($email);
+        $data = [
+            'email' =>  $request->email,
+            'text' => 'Link Resetpassword : ' . env('APP_URL') . 'auth=' . $token,
+            'category' => 'Resetpassword'
+        ];
+        Verify::sendMail($data);
+        Resetpassword::create($requestPasswordData);
         notyf()->addSuccess('Link reset password telah dikirim ke email anda.');
         notyf()->addSuccess('Cek inbox atau spam.');
-        Resetpassword::create($requestPasswordData);
         return back();
     }
     /**
@@ -139,23 +127,21 @@ class AuthController extends Controller
                 $codeVerif = mt_rand(000000, 999999);
                 $date = $this->date->addMinutes(30);
                 $expires = $date->format('Y-m-d h:i:s');
-                $apiKey = '{MAIL_TRAP_API_KEY}';
-                $mailtrap = new MailtrapClient(new Config($apiKey));
-                $email = (new Email())
-                    ->from(new Address('support@rizal-pedia.my.id', 'Support'))
-                    ->to(new Address($req->email))
-                    ->subject('Verifikasi Akun')
-                    ->text('Code Verifikasi : ' . $codeVerif);
-                $email->getHeaders()
-                    ->add(new CategoryHeader('Verifikasi Akun'));
-                $response = $mailtrap->sending()->emails()->send($email);
+                $data = [
+                    'email' =>  $req->email,
+                    'text' => 'Code Verifikasi Anda : ' . $codeVerif,
+                    'category' => 'Verifikasi Akun'
+                ];
+                Verify::sendMail($data);
                 Verify::create([
                     'username' => $user->username,
                     'token' => $codeVerif,
                     'expires_at' => $expires
                 ]);
+                notyf()->addSuccess('Berhasil masuk. Silakan verifikasi terlebih dahulu');
                 return redirect()->route('auth@verify');
             }
+
             notyf()->addSuccess('Berhasil masuk.');
             return redirect('/');
         }
@@ -187,6 +173,31 @@ class AuthController extends Controller
         notyf()->addSuccess('Password berhasil diperbaharui.');
         return redirect()->route('auth@signin');
     }
+    public function verify_store_again(Verify $verify)
+    {
+        $token = mt_rand(000000, 999999);
+        $date = $this->date->addMinutes(30);
+        $expires = $date->format('Y-m-d h:i:s');
+        $find = $verify->where('username', '=', Auth()->user()->username);
+        if ($find) {
+            $find->delete();
+        }
+        $data = [
+            'email' =>  Auth::user()->email,
+            'text' => 'Code Verifikasi Anda : ' . $token,
+            'category' => 'Verifikasi Akun'
+        ];
+        Verify::sendMail($data);
+        Verify::create([
+            'username' => Auth::user()->username,
+            'token' => $token,
+            'expires_at' => $expires
+        ]);
+        $response = [
+            'message' => 'Code berhasil dikirim. Cek Inbox atau Spam didalam email anda.',
+        ];
+        return response()->json($response, 201);
+    }
     public function verify_store(Request $request, Verify $verify, User $user)
     {
         $requestData = ['token' => 'required'];
@@ -198,7 +209,7 @@ class AuthController extends Controller
         $now = $this->date->format('Y-m-d h:i:s');
         if (!$token) {
             notyf()->addError('Kode Verifikasi tidak valid.');
-            return back();
+            return back()->withInput();
         } else if ($token->expires_at <= $now) {
             notyf()->addError('Kode Verifikasi telah kadaluarsa.');
             $token->delete();

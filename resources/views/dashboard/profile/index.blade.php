@@ -1,4 +1,5 @@
 @extends('dashboard.app')
+@section('title','Profile')
 @section('profile.index')
     <div class="flex lg:flex-row md:flex-row flex-col justify-center items-center gap-3 mt-10">
         <div class="flex flex-col items-center p-3 px-6 rounded-md border shadow-sm lg:w-80 md:w-80">
@@ -124,9 +125,6 @@
                         <input type="text" class="input input-sm input-bordered focus:outline-none rounded-md w-full"
                             value="{{ auth()->user()->username }}" name="Username" placeholder="Username">
                     </div>
-                    @error('Username')
-                        <span class="text-error">{{ $message }}</span>
-                    @enderror
                 </div>
                 <div class="mb-2">
                     <span>Api Key</span>
